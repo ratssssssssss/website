@@ -1,14 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Image Upload</title>
+	<title>Image Sharing Website</title>
+	<style>
+		/* Styling for image grid */
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			grid-gap: 20px;
+		}
+		.grid-item {
+			border: 1px solid #ccc;
+			padding: 10px;
+			text-align: center;
+		}
+		.grid-item img {
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
 </head>
 <body>
-	<h1>Image Upload Form</h1>
+	<h1>Image Sharing Website</h1>
+	<!-- Upload form -->
 	<form method="POST" action="upload.php" enctype="multipart/form-data">
 		<label for="file">Select image to upload:</label>
 		<input type="file" name="file" id="file"><br><br>
 		<input type="submit" name="submit" value="Upload">
 	</form>
+	
+	<!-- Display uploaded images -->
+	<h2>Images uploaded by users:</h2>
+	<div class="grid">
+		<?php
+		// Read images from directory and display them in a grid
+		$dir = "uploads/";
+		if (is_dir($dir)){
+			$files = scandir($dir);
+			foreach($files as $file) {
+				if ($file !== '.' && $file !== '..') {
+					echo '<div class="grid-item"><img src="'.$dir.$file.'"></div>';
+				}
+			}
+		}
+		?>
+	</div>
 </body>
 </html>
