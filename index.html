@@ -23,7 +23,35 @@
 <body>
 	<h1>Image Sharing Website</h1>
 	<!-- Upload form -->
-	<form method="POST" action="upload.php" enctype="multipart/form-data">
+	<?php
+	$target_dir = "uploads/";
+	$uploadOk = 1;
+	if(isset($_POST["submit"])) {
+		$target_file = $target_dir . basename($_FILES["file"]["name"]);
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		$check = getimagesize($_FILES["file"]["tmp_name"]);
+		if($check !== false) {
+			$uploadOk = 1;
+		} else {
+			echo "File is not an image.";
+			$uploadOk = 0;
+		}
+		if (file_exists($target_file)) {
+			echo "Sorry, file already exists.";
+			$uploadOk = 0;
+		}
+		if ($uploadOk == 0) {
+			echo "Sorry, your file was not uploaded.";
+		} else {
+			if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+				echo "The file ". htmlspecialchars( basename( $_FILES["file"]["name"])). " has been uploaded.";
+			} else {
+				echo "Sorry, there was an error uploading your file.";
+			}
+		}
+	}
+	?>
+	<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 		<label for="file">Select image to upload:</label>
 		<input type="file" name="file" id="file"><br><br>
 		<input type="submit" name="submit" value="Upload">
